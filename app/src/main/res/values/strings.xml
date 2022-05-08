@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">Saikou</string>
-    <string name="slogan">The Best Anime, Manga &amp; Novel app for Android.</string>
-    <string name="تسجيل الدخول">Login</string>
-    <string name="تسجيل خروج">Logout</string>
+    <string name="app_name">سايكو</string>
+    <string name="slogan">أفضل تطبيق للأنمي والمانجا والروايات لنظام أندرويد</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="logout">تسجيل خروج</string>
 
     <string name="discord">https://discord.gg/5TXAWTU5qr</string>
     <string name="telegram">https://telegram.me/saikou_app</string>
     <string name="github">https://github.com/saikou-app/saikou</string>
 
-    <string name="home">الصفحة الرئيسية</string>
+    <string name="home">رئيسي</string>
     <string name="anime">انمي</string>
     <string name="browse_anime">تصفح الأنمي</string>
     <string name="manga">مانجا</string>
@@ -30,24 +30,24 @@
     <string name="search">بحث</string>
     <string name="search_results">نتائج البحث</string>
     <string name="sort_by">ترتيب حسب</string>
-    <string name="genre">النوع</string>
-    <string name="top_score">أعلى نقاطا</string>
+    <string name="genre">تصنيف</string>
+    <string name="top_score">التقييم الأعلى</string>
     <string name="updated">تم تحديثه مؤخرا</string>
-    <string name="trending_anime">تراندين انمي</string>
+    <string name="trending_anime">الأنمي الرائج</string>
     <string name="popular_anime">أنمي شعبية</string>
-    <string name="trending_manga">تراندين مانجا</string>
-    <string name="trending_novel">تراندين نوفل</string>
+    <string name="trending_manga">المانجا الرائج</string>
+    <string name="trending_novel">الروايات الرائجة</string>
     <string name="popular_manga">مانغا شعبية</string>
 
     <string name="username">اسم المستخدم</string>
     <string name="chapters_read">Chapters Read\u0008</string>
     <string name="episodes_watched">Episodes Watched\u0008</string>
-    <string name="continue_reading">أكمل القراءة</string>
+    <string name="continue_reading">تابع القراءة</string>
     <string name="continue_watching">تابع المشاهدة</string>
     <string name="recommended">موصى به</string>
 
     <string name="get_recommendations">شاهد/اقرأ  بعض النمي أو المانجا للحصول على توصيات</string>
-    <string name="empty">All caught up, when New?</string>
+    <string name="empty">أتممت المتابعة، ابحث عن شي جديد؟</string>
     <string name="title_activity_media">MediaActivity</string>
     <string name="action_settings">الإعدادات</string>
 
@@ -64,7 +64,7 @@
         <item>PAUSED</item>
         <item>DROPPED</item>
     </string-array>
-    <string name="progress">PROGRESS</string>
+    <string name="progress">تقدم المتابعة</string>
     <string name="score">نتيجة</string>
     <string name="score_suffix">\u0008/ 10</string>
     <string name="started_at">بدأت في</string>
@@ -86,7 +86,7 @@
     <string name="end_date">تاريخ الانتهاء</string>
     <string name="source">مصدر</string>
     <string name="main_studio">ستوديو</string>
-    <string name="genres">الأنواع</string>
+    <string name="genres">التصنيف</string>
     <string name="description">ملخص</string>
     <string name="characters">الشخصيات</string>
     <string name="relations">علاقات</string>
@@ -107,13 +107,13 @@
     <string name="not_supported">%1$s is not supported yet!</string>
     <string name="server_selector">حدد السرفر</string>
     <string name="auto_select_server">التحديد التلقائي للسرفر</string>
-    <string name="make_default">جعل الافتراضي</string>
+    <string name="make_default">جعل السرفر افتراضي</string>
     <string name="filler">فلر</string>
-    <string name="adult">Adult</string>
-    <string name="list_only">List Only</string>
-    <string name="tag">Tag</string>
-    <string name="tags">Tags</string>
-    <string name="synonyms">Synonyms</string>
+    <string name="adult">بالغ</string>
+    <string name="list_only">القائمة فقط</string>
+    <string name="tag">علامة</string>
+    <string name="tags">علامات</string>
+    <string name="synonyms">مرادفات</string>
     <string name="trailer">عرض مختصر</string>
     <string name="opening">افتتاح</string>
     <string name="ending">النهاية</string>
@@ -124,7 +124,7 @@
     <string name="downloads">التحميلات</string>
     <string name="settings">إعدادات</string>
     <string name="player_settings">إعدادات المشغل</string>
-    <string name="recentlyListOnly">Only show My Shows in Recently Updated</string>
+    <string name="recentlyListOnly">أظهر العروض فقط في المحدثة من زمن قصير</string>
     <string name="downloadInSd">تنزيل في بطاقة SD</string>
     <string name="noSdFound">لم يتم العثور على بطاقة SD.</string>
     <string name="reader_settings">إعدادات القارئ</string>
@@ -181,34 +181,34 @@
     <string name="auto_skip_fillers">تخطي الفلر تلقائياً</string>
     <string name="auto_skip_fillers_info">.تخطي حلقات الفلر عند الذهاب الى الحلقة التالية</string>
 
-    <string name="update_progress">Update Progress</string>
+    <string name="update_progress">تحديث التقدم</string>
     <string name="ask_update_progress">Ask for each Anime \"Individually\"</string>
-    <string name="ask_update_progress_info">Turning off will always automatically update progress when episode is watched.</string>
-    <string name="ask_update_progress_hentai">Update Progress for Hentai</string>
+    <string name="ask_update_progress_info">اطفاءه سوف يقوم بتحديث التقدم تلقائياً عند اتمام مشاهدة الحلقة</string>
+    <string name="ask_update_progress_hentai">تحديث التقدم للهنتاي</string>
     <string name="very_bold">Very Bold of You sar</string>
-    <string name="complete_percentage">Watch Update Percentage</string>
+    <string name="complete_percentage">النسبة المئوية لتحديث المشاهدة</string>
     <string name="complete_percentage_info">The percentage at which your Anilist progress should be updated after watching an episode. \nThis also sets the \% for when to preload links for the next episode.</string>
 
     <string name="behaviour">سلوك</string>
-    <string name="always_continue">Always Continue from where you Left</string>
-    <string name="pause_video_focus">Pause when not in Focus</string>
-    <string name="gestures">Volume &amp; Brightness Gestures</string>
+    <string name="always_continue">تابع دائما من حيث تركت</string>
+    <string name="pause_video_focus">الايقاف مؤقتاً في حالة عدم التركيز</string>
+    <string name="gestures">ايماءات السطوع والصوت</string>
     <string name="double_tap">انقر مرتين  للسعي للأمام أو للخلف</string>
     <string name="double_tap_info">Turning off will show fast forward &amp; rewind buttons</string>
     <string name="seek_time">وقت السعى</string>
     <string name="seek_time_info">Amount of time in seconds for fast forward &amp; rewind.</string>
     <string name="skip_time">تخطي الوقت</string>
     <string name="skip_time_info">.الإعداد إلى 0 ، يخفي زر التخطي</string>
-    <string name="show_cast_button">Show Cast Button</string>
+    <string name="show_cast_button">اظهار زر الكاست</string>
     <string name="show_cast_button_info">Requires \"Web Video Caster\" app to cast.</string>
     <string name="picture_in_picture">نافذة منبثقة</string>
-    <string name="always_minimize">Always Minimize</string>
+    <string name="always_minimize">دائماً مصغر</string>
     <string name="always_minimize_info">Requires PiP to be enabled, Makes the player behave like Youtube Player but better.\nAlso hides the PiP button.</string>
 
     <string name="app">تطبيق</string>
     <string name="immersive_mode">إخفاء الحالة</string>
-    <string name="immersive_mode_info">.يتطلب إعادة تشغيل التطبيق حتى يتم تطبيقه بالكامل</string>
-    <string name="home_layout_show">Show/Hide Layouts on Home</string>
+    <string name="immersive_mode_info">يتطلب إعادة تشغيل التطبيق حتى يتم تطبيقه بالكامل.</string>
+    <string name="home_layout_show">اظهار/اخفاء تصميمات الصفحة الرئيسية</string>
     <string-array name="home_layouts">
         <item>Continue Watching</item>
         <item>Favourite Anime</item>
@@ -219,9 +219,9 @@
 
     <string name="startUpTab">بدء افتراضي</string>
     <string name="small_view">عرض صغير في العروض الشائعة</string>
-    <string name="animations">انيميشن</string>
-    <string name="banner_animations">انيميشن البانر</string>
-    <string name="layout_animations">لي اوت انيميشن</string>
+    <string name="animations">حركة</string>
+    <string name="banner_animations">حركة البانر</string>
+    <string name="layout_animations">حركة التصميم</string>
     <string name="animation_speed">السرعة الإجمالية</string>
     <string name="empty_fav">Looks like you don\'t like anything,\nTry Hearting a show to keep it here.</string>
     <string name="fav_anime">انمي المفضلة</string>
@@ -231,7 +231,7 @@
     <string name="previous">السابق</string>
     <string name="current_page">الصفحة الحالية</string>
     <string name="dubbed">مدبلج</string>
-    <string name="prefer_dub">تفضل أنمي مدبلج</string>
+    <string name="prefer_dub">تفضيل الأنمي المدبلج</string>
     <string name="none">لا شيء</string>
     <string name="selected_dns">المحدد DNS</string>
     <string name="dns_info">قم بتغييره، إذا قام مزود خدمة إنترنت بحجب أي مصدر</string>
