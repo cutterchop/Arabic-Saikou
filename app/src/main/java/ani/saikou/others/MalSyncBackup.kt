@@ -1,35 +1,42 @@
 package ani.saikou.others
 
-import ani.saikou.findBetween
-import ani.saikou.media.Source
-import ani.saikou.toastString
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
-import org.jsoup.Jsoup
+import ani.saikou.client
+import ani.saikou.logError
+import ani.saikou.parsers.ShowResponse
+import com.fasterxml.jackson.annotation.JsonProperty
 
 object MalSyncBackup {
-    operator fun get(id: Int,name:String,dub:Boolean=false):Source?{
+    data class MalBackUpSync(
+        @JsonProperty("Pages")
+        val pages: Map<String, Map<String, Page>>? = null
+    )
+
+    data class Page(
+        val identifier: String,
+        val title: String,
+        val url: String? = null,
+        val image: String? = null,
+        val active: Boolean? = null,
+    )
+
+    suspend fun get(id: Int, name: String, dub: Boolean = false): ShowResponse? {
         try {
-            val json = Jsoup.connect("https://raw.githubusercontent.com/MALSync/MAL-Sync-Backup/master/data/anilist/anime/$id.json").ignoreHttpErrors(true).ignoreContentType(true).get().body().text()
-            if(json!="404: Not Found")
-                when(name){
-                    "Gogoanime"->{
-                        println("Gogo")
-                        Json.decodeFromString<JsonObject>(json)["Pages"]?.jsonObject?.get(name)?.also {
-                            println(it)
-                            val slug = it.toString().replace("\n","").findBetween((if(dub) "-dub" else "") + "\":{\"identifier\":\"","\",")
-                            if(slug!=null){
-                                println(slug)
-                                return Source(slug,"Automatically","")
-                            }
-                        }
+            val json =
+                client.get("https://raw.githubusercontent.com/MALSync/MAL-Sync-Backup/master/data/anilist/anime/$id.json")
+            if (json.text != "404: Not Found")
+                json.parsed<MalBackUpSync>().pages?.get(name)?.forEach {
+                    val page = it.value
+                    val slug = if (dub)
+                        if (page.title.lowercase().endsWith("(dub)")) {
+                            page.identifier
+                        } else null
+                    else page.identifier
+                    if(slug!=null && page.active==true){
+                        return ShowResponse(page.title,slug,page.image?:"")
                     }
                 }
-
-        }catch (e:Exception){
-            toastString(e.toString())
+        } catch (e: Exception) {
+            logError(e)
         }
         return null
     }

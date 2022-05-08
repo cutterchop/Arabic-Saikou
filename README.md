@@ -5,28 +5,40 @@
    <a href="https://github.com/saikou-app/saikou/releases"><img src="https://img.shields.io/github/downloads/saikou-app/saikou/total?color=%233DDC84&logo=android&logoColor=%23fff&style=for-the-badge"></a>
 </p>
 
-Saikou is crafted based on simplistic yet out-of-state elegancy. It is an [Anilist](https://anilist.co/) only client, which also lets you stream & download Anime & Manga. 
+Saikou is crafted based on simplistic yet state-of-the-art elegance. It is an [Anilist](https://anilist.co/) only client, which also lets you stream-download Anime & Manga. 
 <br><br>
 <i>Saikou (最高; Sai-kō) literally means the best in japanese. Well, we would like to say this is the best open source app for anime and manga on Android, but hey, Try it out yourself & judge!
 </i> 
 <br>
 <br>
 
-> NOTE: Please do not attempt to upload Saikou or any of it's forks upon the Playstore or any other Android appstores on the internet. Doing so may infringe their terms and conditions. This may result to legal action or immediate take-down of the app.
+### 🌟STAR THIS REPOSITORY TO SUPPORT THE DEVELOPER AND ENCOURAGE THE DEVELOPMENT OF THE APPLICATION!
 
 <br>
 
-**🌟STAR THIS REPOSITORY TO SUPPORT THE DEVELOPER AND ENCOURAGE THE DEVELOPMENT OF THE APPLICATION!**
+> Please do not attempt to upload Saikou or any of it's forks on Playstore or any other Android appstores on the internet. Doing so, may infringe their terms and conditions. This may result to legal action or immediate take-down of the app.
 
-<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220208-125810.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220208-125840.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220208-125850.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220208-130037.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220208-130042.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220208-130054.png?raw=true" style="width: 23%;margin:16px;" />
+<br>
+
+<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-175525.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-175542.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-175551.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-175600.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-183102.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-183112.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-183120.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-182352.png?raw=true" style="width: 23%;margin:16px;" />&nbsp;&nbsp;<img src="https://github.com/saikou-app/saikou-app.github.io/blob/main/assets/Screenshot_20220330-182421.png?raw=true" style="width: 23%;margin:16px;" />
+
+
 ## APP FEATURES
 
-✓ Easy and functional way to stream anime and read manga, free with no ads.
+- Easy and functional way to both, watch anime and read manga, Ad Free.
 
-✓ Efficient scraping for anime and manga from multiple sources. (_Spoiler Alert : No webviews were harmed_)
+- A completely open source app with a nice UI & Animations :)
 
-  * **Available Anime sources:-** 
+- The most Efficient scraping for anime and manga from multiple sources. (_Spoiler Alert : No web-views were harmed_)
 
+- Synchronize anime and manga real-time with AniList. Easily categorise anime and manga based on your current status. (Powered by AniList)
+
+- Find all shows using thoroughly and frequently updated list of all trending, popular and ongoing anime based on scores.
+
+- View extensive details about anime shows, movies and manga titles. It also features ability to countdown to the next episode of airing anime. (Powered by AniList & MyAnimeList)
+
+
+* **Available Anime sources:-**
 
 | SITE                       | STATUS  | DOWNLOADS |
 |:--------------------------:|:-------:|:---------:|
@@ -34,25 +46,63 @@ Saikou is crafted based on simplistic yet out-of-state elegancy. It is an [Anili
 | [Zoro](https://zoro.to)            | WORKING | NO        |
 | [9Anime](https://animekisa.in) 😮  | WORKING | NO        |
 | [Tenshi](https://tenshi.moe)       | WORKING | YES       |
-| [Twist](https://twist.moe)         | WORKING | YES       |
+| [AllAnime](https://allanime.site)         | WORKING | YES       |
 
- 
-  * **Available Manga sources:-** 
- 
+
+* **Available Manga sources:-**
+
 | SITE                                  | STATUS  |
 |:-------------------------------------:|:-------:|
 | [MangaBuddy](https://mangabuddy.com/) | WORKING |
 | [MangaSee](https://mangasee123.com/)  | WORKING |
 | [MangaPill](https://mangapill.com/)   | WORKING |
 | [MangaDex](https://mangadex.org/)     | WORKING |
+| [MangaReaderTo](https://mangareader.to/)     | WORKING |
 
-✓ View extensive details about anime shows, movies and manga titles. It also features ability to countdown to the next episode of airing anime. (Powered by AniList)
+## Planned Stuff
 
-✓ Thoroughly and frequently updated list of all trending, popular and ongoing anime based on scores. (Powered by AniList)
+- Rework Manga Reader #18  
 
-✓ Synchronize anime and manga real-time with AniList. Easily categorise anime and manga based on your current status. (Powered by AniList)
+- User Profile
+  
+- Downloads for Manga
+  
+- source subscribe (will notify when new chapter/ep is released)
+  
+- Add novel sources (1lib.in)
+  
+- Add new anime sources (All anime, animepahe, Real 9anime ) & (hentaihaven)
+  
+- Add new manga sources (mangakakalot) & (nhentai)
+  
+- anime schedule page
 
-✓ Filter anime according to genres and popularity.
+
+## Rejected Stuff
+
+- Sources of any language except English
+
+- News Section in the App
+   
+- More Search Options
+   
+- Comment Section
+
+- Accent Color Change (Hot Pink Supremacy.)
+
+- Subtitles Customization
+
+## Help wanted for:
+
+- TV support
+  
+- PiP
+  
+- Multi Quality Download
+
+- Bulk Download
+
+- Novel Reader
 
 ## WANT TO CONTRIBUTE?
 

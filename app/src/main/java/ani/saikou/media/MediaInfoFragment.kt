@@ -3,6 +3,7 @@ package ani.saikou.media
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -16,12 +17,17 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import ani.saikou.*
+import ani.saikou.anilist.GenresViewModel
 import ani.saikou.databinding.*
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.io.Serializable
 import java.net.URLEncoder
 
@@ -33,6 +39,7 @@ class MediaInfoFragment : Fragment() {
     private var timer: CountDownTimer? = null
     private var loaded = false
     private var type = "ANIME"
+    private val genreModel: GenresViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMediaInfoBinding.inflate(inflater, container, false)
@@ -45,22 +52,26 @@ class MediaInfoFragment : Fragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val model: MediaDetailsViewModel by activityViewModels()
         binding.mediaInfoProgressBar.visibility = if (!loaded) View.VISIBLE else View.GONE
         binding.mediaInfoContainer.visibility = if (loaded) View.VISIBLE else View.GONE
         binding.mediaInfoContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> { bottomMargin += 128f.px + navBarHeight }
 
-        val model : MediaDetailsViewModel by activityViewModels()
+        model.scrolledToTop.observe(viewLifecycleOwner){
+            if(it) binding.mediaInfoScroll.scrollTo(0,0)
+        }
+
         model.getMedia().observe(viewLifecycleOwner) { media ->
-            if (media != null) {
+            if (media != null && !loaded) {
                 loaded = true
                 binding.mediaInfoProgressBar.visibility = View.GONE
                 binding.mediaInfoContainer.visibility = View.VISIBLE
-                binding.mediaInfoName.text = "\t\t\t" + media.getMainName()
+                binding.mediaInfoName.text = "\t\t\t" + (media.name?:media.nameRomaji)
                 binding.mediaInfoName.setOnLongClickListener {
-                    copyToClipboard(media.getMainName())
+                    copyToClipboard(media.name?:media.nameRomaji)
                     true
                 }
-                if (media.name != "null") binding.mediaInfoNameRomajiContainer.visibility = View.VISIBLE
+                if (media.name != null) binding.mediaInfoNameRomajiContainer.visibility = View.VISIBLE
                 binding.mediaInfoNameRomaji.text = "\t\t\t" + media.nameRomaji
                 binding.mediaInfoNameRomaji.setOnLongClickListener {
                     copyToClipboard(media.nameRomaji)
@@ -70,17 +81,15 @@ class MediaInfoFragment : Fragment() {
                 binding.mediaInfoStatus.text = media.status
                 binding.mediaInfoFormat.text = media.format
                 binding.mediaInfoSource.text = media.source
-                binding.mediaInfoStart.text =
-                    if (media.startDate.toString() != "") media.startDate.toString() else "??"
-                binding.mediaInfoEnd.text =
-                    if (media.endDate.toString() != "") media.endDate.toString() else "??"
+                binding.mediaInfoStart.text = media.startDate?.toString() ?: "??"
+                binding.mediaInfoEnd.text =media.endDate?.toString() ?: "??"
                 if (media.anime != null) {
                     binding.mediaInfoDuration.text =
                         if (media.anime.episodeDuration != null) media.anime.episodeDuration.toString() else "??"
                     binding.mediaInfoDurationContainer.visibility = View.VISIBLE
                     binding.mediaInfoSeasonContainer.visibility = View.VISIBLE
                     binding.mediaInfoSeason.text =
-                        media.anime.season ?: "??" + " " + media.anime.seasonYear
+                        (media.anime.season ?: "??")+ " " + (media.anime.seasonYear ?: "??")
                     if (media.anime.mainStudio != null) {
                         binding.mediaInfoStudioContainer.visibility = View.VISIBLE
                         binding.mediaInfoStudio.text = media.anime.mainStudio!!.name
@@ -99,8 +108,7 @@ class MediaInfoFragment : Fragment() {
                     binding.mediaInfoTotal.text =
                         if (media.anime.nextAiringEpisode != null) (media.anime.nextAiringEpisode.toString() + " | " + (media.anime.totalEpisodes
                             ?: "~").toString()) else (media.anime.totalEpisodes ?: "~").toString()
-                }
-                else if (media.manga != null) {
+                } else if (media.manga != null) {
                     type = "MANGA"
                     binding.mediaInfoTotalTitle.setText(R.string.total_chaps)
                     binding.mediaInfoTotal.text = (media.manga.totalChapters ?: "~").toString()
@@ -208,10 +216,12 @@ class MediaInfoFragment : Fragment() {
                         val first = a.indexOf('"').let { if (it != -1) it else return a } + 1
                         val end = a.indexOf('"', first).let { if (it != -1) it else return a }
                         val name = a.subSequence(first, end).toString()
-                        return "${a.subSequence(0, first)}[$name](https://www.youtube.com/results?search_query=${URLEncoder.encode(name, "utf-8")})${a.subSequence(end, a.length)}"
+                        return "${a.subSequence(0, first)}" +
+                                "[$name](https://www.youtube.com/results?search_query=${URLEncoder.encode(name, "utf-8")})" +
+                                "${a.subSequence(end, a.length)}"
                     }
 
-                    fun makeText(textView: TextView,arr:ArrayList<String>){
+                    fun makeText(textView: TextView, arr: ArrayList<String>) {
                         var op = ""
                         arr.forEach {
                             op += "\n"
@@ -233,7 +243,7 @@ class MediaInfoFragment : Fragment() {
                     if (media.anime.op.isNotEmpty()) {
                         val bind = ItemTitleTextBinding.inflate(LayoutInflater.from(context), parent, false)
                         bind.itemTitle.setText(R.string.opening)
-                        makeText(bind.itemText,media.anime.op)
+                        makeText(bind.itemText, media.anime.op)
                         parent.addView(bind.root)
                     }
 
@@ -241,20 +251,39 @@ class MediaInfoFragment : Fragment() {
                     if (media.anime.ed.isNotEmpty()) {
                         val bind = ItemTitleTextBinding.inflate(LayoutInflater.from(context), parent, false)
                         bind.itemTitle.setText(R.string.ending)
-                        makeText(bind.itemText,media.anime.ed)
+                        makeText(bind.itemText, media.anime.ed)
                         parent.addView(bind.root)
                     }
                 }
 
                 if (media.genres.isNotEmpty()) {
-                    val bind = ItemTitleRecyclerBinding.inflate(
+                    val bind = ActivityGenreBinding.inflate(
                         LayoutInflater.from(context),
                         parent,
                         false
                     )
-                    bind.itemTitle.setText(R.string.genres)
-                    bind.itemRecycler.adapter = GenreAdapter(media.genres, type, requireActivity())
-                    bind.itemRecycler.layoutManager = GridLayoutManager(requireContext(), (screenWidth / 156f).toInt())
+                    val adapter = GenreAdapter(type)
+                    genreModel.doneListener = {
+                        MainScope().launch {
+                            bind.mediaInfoGenresProgressBar.visibility = View.GONE
+                        }
+                    }
+                    if (genreModel.genres != null) {
+                        adapter.genres = genreModel.genres!!
+                        adapter.pos = ArrayList(genreModel.genres!!.keys)
+                        if (genreModel.done) genreModel.doneListener?.invoke()
+                    }
+                    bind.mediaInfoGenresRecyclerView.adapter = adapter
+                    bind.mediaInfoGenresRecyclerView.layoutManager =
+                        GridLayoutManager(requireActivity(), (screenWidth / 156f).toInt())
+
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        genreModel.loadGenres(media.genres) {
+                            MainScope().launch {
+                                adapter.addGenre(it)
+                            }
+                        }
+                    }
                     parent.addView(bind.root)
                 }
 
@@ -286,7 +315,7 @@ class MediaInfoFragment : Fragment() {
                     )
                     bind.itemTitle.setText(R.string.characters)
                     bind.itemRecycler.adapter =
-                        CharacterAdapter(media.characters!!, requireActivity())
+                        CharacterAdapter(media.characters!!)
                     bind.itemRecycler.layoutManager = LinearLayoutManager(
                         requireContext(),
                         LinearLayoutManager.HORIZONTAL,
@@ -296,20 +325,6 @@ class MediaInfoFragment : Fragment() {
                 }
 
                 if (!media.relations.isNullOrEmpty()) {
-                    val bindi = ItemTitleRecyclerBinding.inflate(
-                        LayoutInflater.from(context),
-                        parent,
-                        false
-                    )
-                    bindi.itemRecycler.adapter =
-                        MediaAdaptor(0, media.relations!!, requireActivity())
-                    bindi.itemRecycler.layoutManager = LinearLayoutManager(
-                        requireContext(),
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
-                    parent.addView(bindi.root)
-
                     if (media.sequel != null || media.prequel != null) {
                         val bind = ItemQuelsBinding.inflate(
                             LayoutInflater.from(context),
@@ -355,6 +370,21 @@ class MediaInfoFragment : Fragment() {
                         }
                         parent.addView(bind.root)
                     }
+
+                    val bindi = ItemTitleRecyclerBinding.inflate(
+                        LayoutInflater.from(context),
+                        parent,
+                        false
+                    )
+
+                    bindi.itemRecycler.adapter =
+                        MediaAdaptor(0, media.relations!!, requireActivity())
+                    bindi.itemRecycler.layoutManager = LinearLayoutManager(
+                        requireContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                    )
+                    parent.addView(bindi.root)
                 }
 
                 if (!media.recommendations.isNullOrEmpty()) {
@@ -375,21 +405,23 @@ class MediaInfoFragment : Fragment() {
                 }
             }
         }
-        val cornerTop = ObjectAnimator.ofFloat(binding.root,"radius",0f,32f).setDuration(200)
-        val cornerNotTop = ObjectAnimator.ofFloat(binding.root,"radius",32f,0f).setDuration(200)
-        var cornered = true
-        cornerTop.start()
-        binding.mediaInfoScroll.setOnScrollChangeListener { v, _, _, _, _ ->
-            if(!v.canScrollVertically(-1)){
-                if(!cornered) {
-                    cornered = true
-                    cornerTop.start()
-                }
-            }
-            else {
-                if(cornered){
-                    cornered=false
-                    cornerNotTop.start()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val cornerTop = ObjectAnimator.ofFloat(binding.root, "radius", 0f, 32f).setDuration(200)
+            val cornerNotTop = ObjectAnimator.ofFloat(binding.root, "radius", 32f, 0f).setDuration(200)
+            var cornered = true
+            cornerTop.start()
+            binding.mediaInfoScroll.setOnScrollChangeListener { v, _, _, _, _ ->
+                if (!v.canScrollVertically(-1)) {
+                    if (!cornered) {
+                        cornered = true
+                        cornerTop.start()
+                    }
+                } else {
+                    if (cornered) {
+                        cornered = false
+                        cornerNotTop.start()
+                    }
                 }
             }
         }

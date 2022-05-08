@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29"
@@ -22,28 +24,37 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Saikou"
         android:usesCleartextTraffic="true"
-        tools:ignore="AllowBackup">
+        tools:ignore="AllowBackup"
+        tools:targetApi="m">
+        <activity
+            android:name=".settings.UserInterfaceSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settings.PlayerSettingsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:exported="true" />
         <activity
             android:name=".media.SearchActivity"
             android:exported="true" />
         <activity
             android:name=".media.StudioActivity"
-            android:launchMode = "singleTask"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask" />
         <activity
             android:name=".user.ListActivity"
             android:exported="true" />
         <activity
-            android:name=".manga.MangaReaderActivity"
+            android:name=".manga.mangareader.MangaReaderActivity"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:exported="true" />
         <activity
             android:name=".GenreActivity"
-            android:launchMode = "singleTask"
             android:exported="true" />
-
         <activity
             android:name=".media.MediaDetailsActivity"
+            android:theme="@style/Theme.Saikou.NeverCutout"
             android:exported="true" />
         <activity
             android:name=".media.CharacterDetailsActivity"
@@ -53,15 +64,18 @@
             android:exported="true" />
         <activity
             android:name=".anime.ExoplayerView"
-            android:configChanges="orientation|screenSize|layoutDirection"
+            android:label="@string/video"
+            android:supportsPictureInPicture="true"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
             android:exported="true"
-            android:keepScreenOn="true"
-            android:theme="@style/Theme.Saikou.Exoplayer" />
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            tools:targetApi="n" />
         <activity
             android:name=".anilist.Login"
-            android:launchMode = "singleTask"
             android:configChanges="orientation|screenSize|layoutDirection"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter android:label="Anilist Login for Saikou">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -75,9 +89,9 @@
         </activity>
         <activity
             android:name=".anilist.UrlMedia"
-            android:launchMode = "singleTask"
             android:configChanges="orientation|screenSize|layoutDirection"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter android:label="Read on Saikou">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -105,7 +119,6 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode = "singleTask"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:exported="true">
             <intent-filter>
@@ -118,6 +131,16 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:enabled="true"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>

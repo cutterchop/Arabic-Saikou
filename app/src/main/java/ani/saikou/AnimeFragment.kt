@@ -18,9 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ani.saikou.anilist.AnilistAnimeViewModel
 import ani.saikou.anilist.SearchResults
+import ani.saikou.anilist.getUserId
 import ani.saikou.databinding.FragmentAnimeBinding
 import ani.saikou.media.MediaAdaptor
 import ani.saikou.media.ProgressAdapter
+import ani.saikou.settings.UserInterfaceSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,9 +30,12 @@ import kotlinx.coroutines.withContext
 import kotlin.math.max
 import kotlin.math.min
 
+
 class AnimeFragment : Fragment() {
     private var _binding: FragmentAnimeBinding? = null
     private val binding get() = _binding!!
+
+    private var uiSettings: UserInterfaceSettings = loadData("ui_settings") ?: UserInterfaceSettings()
 
     val model: AnilistAnimeViewModel by activityViewModels()
 
@@ -73,37 +78,46 @@ class AnimeFragment : Fragment() {
             Refresh.activity[this.hashCode()]!!.postValue(true)
         }
 
-        binding.animePageRecyclerView.updatePaddingRelative(bottom = navBarHeight+160f.px)
+        binding.animePageRecyclerView.updatePaddingRelative(bottom = navBarHeight + 160f.px)
 
         val animePageAdapter = AnimePageAdapter()
         var loading = true
-        if(model.notSet) {
+        if (model.notSet) {
             model.notSet = false
-            model.searchResults = SearchResults("ANIME", isAdult = false, onList = false, results = arrayListOf(), hasNextPage = true, sort = "Popular")
+            model.searchResults = SearchResults(
+                "ANIME",
+                isAdult = false,
+                onList = false,
+                results = arrayListOf(),
+                hasNextPage = true,
+                sort = "Popular"
+            )
         }
-        val popularAdaptor = MediaAdaptor(1, model.searchResults.results ,requireActivity())
+        val popularAdaptor = MediaAdaptor(1, model.searchResults.results, requireActivity())
         val progressAdaptor = ProgressAdapter(searched = model.searched)
-        binding.animePageRecyclerView.adapter = ConcatAdapter(animePageAdapter,popularAdaptor,progressAdaptor)
-        val layout =  LinearLayoutManager(requireContext())
+        val adapter = ConcatAdapter(animePageAdapter, popularAdaptor, progressAdaptor)
+        binding.animePageRecyclerView.adapter = adapter
+        val layout = LinearLayoutManager(requireContext())
         binding.animePageRecyclerView.layoutManager = layout
 
-        var visible=false
-        fun animate(){
-            val start = if(visible) 0f else 1f
-            val end = if(!visible) 0f else 1f
-            ObjectAnimator.ofFloat(binding.animePageScrollTop,"scaleX",start,end).apply {
-                duration=300
+        var visible = false
+        fun animate() {
+            val start = if (visible) 0f else 1f
+            val end = if (!visible) 0f else 1f
+            ObjectAnimator.ofFloat(binding.animePageScrollTop, "scaleX", start, end).apply {
+                duration = 300
                 interpolator = OvershootInterpolator(2f)
                 start()
             }
-            ObjectAnimator.ofFloat(binding.animePageScrollTop,"scaleY",start,end).apply {
-                duration=300
+            ObjectAnimator.ofFloat(binding.animePageScrollTop, "scaleY", start, end).apply {
+                duration = 300
                 interpolator = OvershootInterpolator(2f)
                 start()
             }
         }
 
-        binding.animePageScrollTop.setOnClickListener{
+        binding.animePageScrollTop.setOnClickListener {
+            binding.animePageRecyclerView.scrollToPosition(4)
             binding.animePageRecyclerView.smoothScrollToPosition(0)
         }
 
@@ -114,21 +128,21 @@ class AnimeFragment : Fragment() {
                 if (!v.canScrollVertically(1)) {
                     if (model.searchResults.hasNextPage && model.searchResults.results.isNotEmpty() && !loading) {
                         scope.launch(Dispatchers.IO) {
-                            loading=true
+                            loading = true
                             model.loadNextPage(model.searchResults)
                         }
                     }
                 }
-                if(layout.findFirstVisibleItemPosition()>1 && !visible){
+                if (layout.findFirstVisibleItemPosition() > 1 && !visible) {
                     binding.animePageScrollTop.visibility = View.VISIBLE
                     visible = true
                     animate()
                 }
 
-                if(!v.canScrollVertically(-1)){
+                if (!v.canScrollVertically(-1)) {
                     visible = false
                     animate()
-                    scope.launch{
+                    scope.launch {
                         delay(300)
                         binding.animePageScrollTop.visibility = View.GONE
                     }
@@ -137,18 +151,25 @@ class AnimeFragment : Fragment() {
                 super.onScrolled(v, dx, dy)
             }
         })
-        animePageAdapter.ready.observe(viewLifecycleOwner){ i->
-            if(i==true) {
+        animePageAdapter.ready.observe(viewLifecycleOwner) { i ->
+            if (i == true) {
                 model.getUpdated().observe(viewLifecycleOwner) {
                     if (it != null) {
                         animePageAdapter.updateRecent(MediaAdaptor(0, it, requireActivity()))
                     }
                 }
-                if(animePageAdapter.trendingViewPager!=null) {
+                if (animePageAdapter.trendingViewPager != null) {
                     animePageAdapter.updateHeight()
                     model.getTrending().observe(viewLifecycleOwner) {
                         if (it != null) {
-                            animePageAdapter.updateTrending(MediaAdaptor(2, it, requireActivity(), viewPager = animePageAdapter.trendingViewPager))
+                            animePageAdapter.updateTrending(
+                                MediaAdaptor(
+                                    if (uiSettings.smallView) 3 else 2,
+                                    it,
+                                    requireActivity(),
+                                    viewPager = animePageAdapter.trendingViewPager
+                                )
+                            )
                             animePageAdapter.updateAvatar()
                         }
                     }
@@ -174,11 +195,18 @@ class AnimeFragment : Fragment() {
             }
         }
 
-        val live = Refresh.activity.getOrPut(this.hashCode()) { MutableLiveData(true) }
+        fun load() = scope.launch(Dispatchers.Main) {
+            animePageAdapter.updateAvatar()
+        }
+
+        val live = Refresh.activity.getOrPut(this.hashCode()) { MutableLiveData(false) }
         live.observe(viewLifecycleOwner) {
             if (it) {
                 scope.launch {
                     withContext(Dispatchers.IO) {
+                        getUserId {
+                            load()
+                        }
                         model.loaded = true
                         model.loadTrending()
                         model.loadUpdated()

@@ -23,12 +23,15 @@
         <item name="android:ambientShadowAlpha">0.08</item>
         <item name="android:spotShadowAlpha">0.08</item>
         <item name="snackbarStyle">@style/MySnackbar</item>
+        <item name="snackbarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Snackbar</item>
+        <item name="snackbarTextViewStyle">@string/MySnackBarText</item>
         <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">1000</item>
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@drawable/anim_splash</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
     </style>
 
     <style name="Theme.Saikou" parent="Theme.Base">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="Theme.Saikou.NoActionBar">
@@ -39,8 +42,8 @@
     <style name="Theme.Saikou.AppBarOverlay" parent="Theme.Saikou" />
     <style name="Theme.Saikou.PopupOverlay" parent="Theme.Saikou" />
 
-    <style name="Theme.Saikou.Exoplayer" parent="@style/Theme.Saikou.NoActionBar">
-        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">shortEdges</item>
+    <style name="Theme.Saikou.NeverCutout" parent="@style/Theme.Saikou.NoActionBar">
+        <item name="android:navigationBarColor">@color/nav_bg</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.Saikou">

@@ -6,11 +6,17 @@
         <item name="android:textSize">14sp</item>
         <item name="android:padding">2sp</item>
     </style>
+
     <style name="Suffix">
         <item name="android:height">54dp</item>
         <item name="android:fontFamily">@font/poppins_bold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="text10sp">
+        <item name="android:textSize">10sp</item>
+        <item name="fontFamily">@font/poppins_family</item>
     </style>
 
     <style name="ModalBottomSheetDialog" parent="Widget.MaterialComponents.BottomSheet.Modal">
@@ -32,5 +38,14 @@
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:background">@drawable/round_corner</item>
     </style>
+    <string name="MySnackBarText" parent="Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/bg_opp</item>
+    </string>
+    
+    <style name="fontTooltip" parent="Widget.Material3.Tooltip">
+        <item name="android:padding">8dp</item>
+        <item name="android:textAppearance">@style/Suffix</item>
+    </style>
+
     <style name="BottomNavBar" parent="Widget.Material3.BottomNavigationView.ActiveIndicator"/>
 </resources>

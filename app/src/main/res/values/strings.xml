@@ -1,60 +1,61 @@
 <resources>
-    <string name="app_name">Saikou</string>
-    <string name="slogan">The Best Anime, Manga &amp; Novel app for Android.</string>
-    <string name="login">Login</string>
+    <string name="app_name">سايكو</string>
+    <string name="slogan">أفضل تطبيق للأنمي والمانجا والروايات لنظام أندرويد</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="logout">تسجيل خروج</string>
 
     <string name="discord">https://discord.gg/5TXAWTU5qr</string>
     <string name="telegram">https://telegram.me/saikou_app</string>
     <string name="github">https://github.com/saikou-app/saikou</string>
 
-    <string name="home">Home</string>
-    <string name="anime">Anime</string>
-    <string name="browse_anime">Browse Anime</string>
-    <string name="manga">Manga</string>
-    <string name="browse_manga">Browse Manga</string>
-    <string name="info">Info</string>
-    <string name="watch">Watch</string>
-    <string name="read">Read</string>
+    <string name="home">رئيسي</string>
+    <string name="anime">انمي</string>
+    <string name="browse_anime">تصفح الأنمي</string>
+    <string name="manga">مانجا</string>
+    <string name="browse_manga">تصفح المانجا</string>
+    <string name="info">معلومات</string>
+    <string name="watch">المشاهدة</string>
+    <string name="read">اقرأ</string>
 
-    <string name="anime_list">Anime List</string>
-    <string name="manga_list">Manga List</string>
+    <string name="anime_list">قائمة الأنمي</string>
+    <string name="manga_list">قائمة المانجا</string>
 
     <string name="sad">X(</string>
     <string name="oh">:o</string>
     <string name="colon">\u0008:\u0008</string>
 
-    <string name="no_internet">No Internet Connection</string>
-    <string name="refresh">Refresh</string>
+    <string name="no_internet">لا يوجد اتصال بالإنترنت</string>
+    <string name="refresh">تحديث</string>
 
-    <string name="search">Search</string>
-    <string name="search_results">Search Results</string>
-    <string name="sort_by">Sort By</string>
-    <string name="genre">Genre</string>
-    <string name="top_score">Top Score</string>
-    <string name="updated">Recently Updated</string>
-    <string name="trending_anime">Trending Anime</string>
-    <string name="popular_anime">Popular Anime</string>
-    <string name="trending_manga">Trending Manga</string>
-    <string name="trending_novel">Trending Novel</string>
-    <string name="popular_manga">Popular Manga</string>
+    <string name="search">بحث</string>
+    <string name="search_results">نتائج البحث</string>
+    <string name="sort_by">ترتيب حسب</string>
+    <string name="genre">تصنيف</string>
+    <string name="top_score">التقييم الأعلى</string>
+    <string name="updated">تم تحديثه مؤخرا</string>
+    <string name="trending_anime">الأنمي الرائج</string>
+    <string name="popular_anime">أنمي شعبية</string>
+    <string name="trending_manga">المانجا الرائج</string>
+    <string name="trending_novel">الروايات الرائجة</string>
+    <string name="popular_manga">مانغا شعبية</string>
 
-    <string name="username">Username</string>
+    <string name="username">اسم المستخدم</string>
     <string name="chapters_read">Chapters Read\u0008</string>
     <string name="episodes_watched">Episodes Watched\u0008</string>
-    <string name="continue_reading">Continue Reading</string>
-    <string name="continue_watching">Continue Watching</string>
-    <string name="recommended">Recommended</string>
+    <string name="continue_reading">تابع القراءة</string>
+    <string name="continue_watching">تابع المشاهدة</string>
+    <string name="recommended">موصى به</string>
 
-    <string name="get_recommendations">Watch/Read some Anime or Manga to get Recommendations</string>
-    <string name="empty">All caught up, when New?</string>
+    <string name="get_recommendations">شاهد/اقرأ  بعض النمي أو المانجا للحصول على توصيات</string>
+    <string name="empty">أتممت المتابعة، ابحث عن شي جديد؟</string>
     <string name="title_activity_media">MediaActivity</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">الإعدادات</string>
 
-    <string name="add">Add to List</string>
-    <string name="list_editor">List Editor</string>
-    <string name="add_fav">Add to Favourites</string>
-    <string name="notifications">Notifications</string>
-    <string name="status">STATUS</string>
+    <string name="add">أضف إلى القائمة</string>
+    <string name="list_editor">محرر القائمة</string>
+    <string name="add_fav">أضف إلى المفضلة</string>
+    <string name="notifications">إشعارات</string>
+    <string name="status">الحالة</string>
     <string-array name="status">
         <item>PLANNING</item>
         <item>CURRENT</item>
@@ -63,59 +64,175 @@
         <item>PAUSED</item>
         <item>DROPPED</item>
     </string-array>
-    <string name="progress">PROGRESS</string>
-    <string name="score">SCORE</string>
+    <string name="progress">تقدم المتابعة</string>
+    <string name="score">نتيجة</string>
     <string name="score_suffix">\u0008/ 10</string>
-    <string name="started_at">STARTED AT</string>
-    <string name="completed_at">COMPLETED AT</string>
-    <string name="save">Save</string>
-    <string name="delete">Delete</string>
+    <string name="started_at">بدأت في</string>
+    <string name="completed_at">اكتمل في</string>
+    <string name="save">حفظ</string>
+    <string name="delete">حذف</string>
 
-    <string name="name">Name</string>
-    <string name="name_romaji">Name Romaji</string>
-    <string name="mean_score">Mean Score</string>
-    <string name="format">Format</string>
-    <string name="status_title">Status</string>
-    <string name="total_eps">Total Episodes</string>
-    <string name="total_chaps">Total Chapters</string>
-    <string name="ep_duration">Average Duration</string>
+    <string name="name">اسم</string>
+    <string name="name_romaji">الاسم روماجي</string>
+    <string name="mean_score">التقييم</string>
+    <string name="format">تنسيق</string>
+    <string name="status_title">الحالة</string>
+    <string name="total_eps">مجموع الحلقات</string>
+    <string name="total_chaps">مجموع الفصول</string>
+    <string name="ep_duration">متوسط ​​مدة</string>
     <string name="min">\u0008min</string>
-    <string name="season">Season</string>
-    <string name="start_date">Start Date</string>
-    <string name="end_date">End Date</string>
-    <string name="source">Source</string>
-    <string name="main_studio">Studio</string>
-    <string name="genres">Genres</string>
-    <string name="description">Synopsis</string>
-    <string name="characters">Characters</string>
-    <string name="relations">Relations</string>
+    <string name="season">الموسم</string>
+    <string name="start_date">تاريخ البدء</string>
+    <string name="end_date">تاريخ الانتهاء</string>
+    <string name="source">مصدر</string>
+    <string name="main_studio">ستوديو</string>
+    <string name="genres">التصنيف</string>
+    <string name="description">ملخص</string>
+    <string name="characters">الشخصيات</string>
+    <string name="relations">علاقات</string>
 
-    <string name="roles">Roles</string>
-    <string name="details">Details</string>
+    <string name="roles">الأدوار</string>
+    <string name="details">تفاصيل</string>
 
-    <string name="play_yt">Play on Youtube</string>
-    <string name="eps">Episodes</string>
-    <string name="ep">Episode</string>
-    <string name="chaps">Chapters</string>
-    <string name="chap">Chapter</string>
-    <string name="wrong"><u>Wrong Title?</u></string>
+    <string name="play_yt">التشغيل على اليوتيوب</string>
+    <string name="eps">الحلقات</string>
+    <string name="ep">حلقة</string>
+    <string name="chaps">فصول</string>
+    <string name="chap">فصل</string>
+    <string name="wrong"><u>عنوان خاطئ؟</u></string>
     <string name="source_not_found">
         Couldn\'t find anything X( \n
         Try another source.
     </string>
-    <string name="novel_na">Novels are not supported yet!</string>
-    <string name="server_selector">Select Server</string>
-    <string name="auto_select_server">Auto Selecting Server</string>
-    <string name="make_default">Make Default</string>
-    <string name="filler">Filler</string>
-    <string name="adult">Adult</string>
-    <string name="list_only">List Only</string>
-    <string name="tag">Tag</string>
-    <string name="tags">Tags</string>
-    <string name="synonyms">Synonyms</string>
-    <string name="trailer">Trailer</string>
-    <string name="opening">Opening</string>
-    <string name="ending">Ending</string>
-    <string name="prequel">Prequel</string>
-    <string name="sequel">Sequel</string>
+    <string name="not_supported">%1$s is not supported yet!</string>
+    <string name="server_selector">حدد السرفر</string>
+    <string name="auto_select_server">التحديد التلقائي للسرفر</string>
+    <string name="make_default">جعل السرفر افتراضي</string>
+    <string name="filler">فلر</string>
+    <string name="adult">بالغ</string>
+    <string name="list_only">القائمة فقط</string>
+    <string name="tag">علامة</string>
+    <string name="tags">علامات</string>
+    <string name="synonyms">مرادفات</string>
+    <string name="trailer">عرض مختصر</string>
+    <string name="opening">افتتاح</string>
+    <string name="ending">النهاية</string>
+    <string name="prequel">بادئة</string>
+    <string name="sequel">تتمة</string>
+
+    <string name="anilist_settings">إعدادات Anilist</string>
+    <string name="downloads">التحميلات</string>
+    <string name="settings">إعدادات</string>
+    <string name="player_settings">إعدادات المشغل</string>
+    <string name="recentlyListOnly">أظهر العروض فقط في المحدثة من زمن قصير</string>
+    <string name="downloadInSd">تنزيل في بطاقة SD</string>
+    <string name="noSdFound">لم يتم العثور على بطاقة SD.</string>
+    <string name="reader_settings">إعدادات القارئ</string>
+    <string name="default_source">المصدر الافتراضي</string>
+    <string name="show_yt">إظهار رابط يوتيوب</string>
+    <string name="default_ep_view">تخطيط الحلقة الافتراضي</string>
+    <string name="default_chp_view">تخطيط الفصل الافتراضي</string>
+    <string name="ui">واجهة المستخدم</string>
+    <string name="common">مشترك</string>
+    <string name="theme">مظهر التطبيق</string>
+    <string name="ui_settings">إعدادات واجهة المستخدم</string>
+    <string name="about">عن</string>
+    <string name="desc">\u0008\u0008\u0008 Saikou is crafted based on simplistic yet state-of-the-art elegance. It is an Anilist only client, which also lets you stream-download Anime &amp; Manga.\nSaikou literally means the \"best\" in japanese. Well, we would like to say this is the best open source app for anime and manga on Android, what would you say?</string>
+    <string name="devs">المطورين</string>
+    <string name="disclaimer">عدم اعطاء رأي</string>
+    <string name="full_disclaimer">
+         - Saikou only scrapes links from various websites and makes it easier for users to find anime and manga.
+        \n - Saikou or any of its developer/staff doesn\'t host any of the contents found inside Saikou. Any and all images and anime/manga information found in the app are taken from various public APIs (AniList, MyAnimeList, Kitsu).
+        \n - Furthermore, all of the anime/manga links found in Saikou are taken from various 3rd party anime hosting websites.
+        \n - Saikou or it\'s owners aren\'t liable for any misuse of any of the contents found inside or outside of the app and cannot be held accountable for the distribution of any of the contents found inside the app.
+        \n - By using Saikou, you comply to the fact that the developer of the app is not responsible for any of the contents found in the app; nonetheless they may or may not be from their legitimate sources.
+        \n - If the internet infringement issues are involved, please contact the source website. The developer does not assume any legal responsibility.
+    </string>
+    <string name="version_current">Version %1$s</string>
+    <string-array name="tips">
+        <item>You can Long Click an episode/chapter to Mark it as Read.</item>
+        <item>Long Clicking Shows can directly open List Editor.</item>
+        <item>There are few easter eggs hidden in the App.</item>
+        <item>Internet sucks? search taking too much time? try spam-Clicking the Progress Bar</item>
+        <item>Challenge: Go to the very bottom of the Popular Anime &amp; Manga</item>
+        <item>Try Long Clicking the Show\'s Title.</item>
+        <item>Don\'t be like lonely, they meant the Kuro App.</item>
+        <item>Damn, why are you wasting your Time?</item>
+        <item>Looks like someone likes this Animation.</item>
+        <item>Upgrade to Android 12 to get this every time you open the App.</item>
+        <item>Lord &amp; Saviour - brahmkshatriya</item>
+        <item>You can Long Click to copy this Message.</item>
+        <item>Saikou!</item>
+    </string-array>
+
+    <string name="video">فيديو</string>
+    <string name="video_info">إظهار معلومات الفيديو</string>
+    <string name="video_info_info">Shows what the Resolution of the current video playing, useful for <b>\"Multi Quality\"</b> servers.</string>
+    <string name="default_quality">اختيار الجودة التلقائي</string>
+    <string name="height">ارتفاع</string>
+    <string name="width">عرض</string>
+    <string name="default_quality_info">Automatically uses the closest quality provided by default, ONLY applied for \"Multi Quality\" Servers. Auto changes upon playing a video.</string>
+    <string name="default_playback_speed">Default Playback Speed - %1$s</string>
+    <string name="cursed_speeds">سرعات ملعونه</string>
+
+    <string name="auto">تلقائي</string>
+    <string name="auto_play_next_episode">التشغيل التلقائي للحلقة التالية</string>
+    <string name="auto_play_next_episode_info">تعطيل تلقائيا إذا لم يكن هناك تفاعل مع المشغل بعد 1 ساعة</string>
+    <string name="auto_skip_fillers">تخطي الفلر تلقائياً</string>
+    <string name="auto_skip_fillers_info">.تخطي حلقات الفلر عند الذهاب الى الحلقة التالية</string>
+
+    <string name="update_progress">تحديث التقدم</string>
+    <string name="ask_update_progress">Ask for each Anime \"Individually\"</string>
+    <string name="ask_update_progress_info">اطفاءه سوف يقوم بتحديث التقدم تلقائياً عند اتمام مشاهدة الحلقة</string>
+    <string name="ask_update_progress_hentai">تحديث التقدم للهنتاي</string>
+    <string name="very_bold">Very Bold of You sar</string>
+    <string name="complete_percentage">النسبة المئوية لتحديث المشاهدة</string>
+    <string name="complete_percentage_info">The percentage at which your Anilist progress should be updated after watching an episode. \nThis also sets the \% for when to preload links for the next episode.</string>
+
+    <string name="behaviour">سلوك</string>
+    <string name="always_continue">تابع دائما من حيث تركت</string>
+    <string name="pause_video_focus">الايقاف مؤقتاً في حالة عدم التركيز</string>
+    <string name="gestures">ايماءات السطوع والصوت</string>
+    <string name="double_tap">انقر مرتين  للسعي للأمام أو للخلف</string>
+    <string name="double_tap_info">Turning off will show fast forward &amp; rewind buttons</string>
+    <string name="seek_time">وقت السعى</string>
+    <string name="seek_time_info">Amount of time in seconds for fast forward &amp; rewind.</string>
+    <string name="skip_time">تخطي الوقت</string>
+    <string name="skip_time_info">.الإعداد إلى 0 ، يخفي زر التخطي</string>
+    <string name="show_cast_button">اظهار زر الكاست</string>
+    <string name="show_cast_button_info">Requires \"Web Video Caster\" app to cast.</string>
+    <string name="picture_in_picture">نافذة منبثقة</string>
+    <string name="always_minimize">دائماً مصغر</string>
+    <string name="always_minimize_info">Requires PiP to be enabled, Makes the player behave like Youtube Player but better.\nAlso hides the PiP button.</string>
+
+    <string name="app">تطبيق</string>
+    <string name="immersive_mode">إخفاء الحالة</string>
+    <string name="immersive_mode_info">يتطلب إعادة تشغيل التطبيق حتى يتم تطبيقه بالكامل.</string>
+    <string name="home_layout_show">اظهار/اخفاء تصميمات الصفحة الرئيسية</string>
+    <string-array name="home_layouts">
+        <item>Continue Watching</item>
+        <item>Favourite Anime</item>
+        <item>Continue Reading</item>
+        <item>Favourite Manga</item>
+        <item>Recommended</item>
+    </string-array>
+
+    <string name="startUpTab">بدء افتراضي</string>
+    <string name="small_view">عرض صغير في العروض الشائعة</string>
+    <string name="animations">حركة</string>
+    <string name="banner_animations">حركة البانر</string>
+    <string name="layout_animations">حركة التصميم</string>
+    <string name="animation_speed">السرعة الإجمالية</string>
+    <string name="empty_fav">Looks like you don\'t like anything,\nTry Hearting a show to keep it here.</string>
+    <string name="fav_anime">انمي المفضلة</string>
+    <string name="fav_manga">مانجا المفضلة</string>
+    <string name="restart_app">إعادة تشغيل التطبيق؟</string>
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+    <string name="current_page">الصفحة الحالية</string>
+    <string name="dubbed">مدبلج</string>
+    <string name="prefer_dub">تفضيل الأنمي المدبلج</string>
+    <string name="none">لا شيء</string>
+    <string name="selected_dns">المحدد DNS</string>
+    <string name="dns_info">قم بتغييره، إذا قام مزود خدمة إنترنت بحجب أي مصدر</string>
 </resources>

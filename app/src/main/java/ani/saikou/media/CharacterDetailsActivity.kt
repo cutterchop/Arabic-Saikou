@@ -12,16 +12,14 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import ani.saikou.*
 import ani.saikou.databinding.ActivityCharacterBinding
+import ani.saikou.settings.UserInterfaceSettings
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 class CharacterDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
     private lateinit var binding: ActivityCharacterBinding
@@ -29,6 +27,7 @@ class CharacterDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChang
     private val model: OtherDetailsViewModel by viewModels()
     private lateinit var character: Character
     private var loaded = false
+    val uiSettings = loadData<UserInterfaceSettings>("ui_settings") ?: UserInterfaceSettings()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +35,12 @@ class CharacterDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChang
         setContentView(binding.root)
 
         initActivity(this)
-        screenWidth = resources.displayMetrics.widthPixels.toFloat()
-        this.window.statusBarColor = ContextCompat.getColor(this, R.color.nav_bg_inv)
+        screenWidth = resources.displayMetrics.run { widthPixels / density }
+        if (uiSettings.immersiveMode) this.window.statusBarColor = ContextCompat.getColor(this, R.color.status)
 
-        binding.characterBanner.updateLayoutParams{ height += statusBarHeight }
+        val banner = if (uiSettings.bannerAnimations) binding.characterBanner else binding.characterBannerNoKen
+
+        banner.updateLayoutParams { height += statusBarHeight }
         binding.characterClose.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin += statusBarHeight }
         binding.characterCollapsing.minimumHeight = statusBarHeight
         binding.characterCover.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin += statusBarHeight }
@@ -47,15 +48,14 @@ class CharacterDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChang
         binding.characterTitle.isSelected = true
         binding.characterAppBar.addOnOffsetChangedListener(this)
 
-        binding.characterClose.setOnClickListener{
+        binding.characterClose.setOnClickListener {
             onBackPressed()
         }
-        character = intent.getSerializableExtra("character") as Character
+        character = intent.getSerializableExtra("character") as? Character ?: return
         binding.characterTitle.text = character.name
-        binding.characterBanner.loadImage(character.banner)
+        banner.loadImage(character.banner)
         binding.characterCoverImage.loadImage(character.image)
-        binding.characterCoverImage.setOnClickListener{ (openLinkInBrowser(character.image)) }
-//        binding.characterBanner.setOnClickListener{ openImage(character.banner) }
+        binding.characterCoverImage.setOnLongClickListener { (openLinkInBrowser(character.image)); true }
 
         model.getCharacter().observe(this) {
             if (it != null && !loaded) {
@@ -64,66 +64,65 @@ class CharacterDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChang
                 binding.characterProgress.visibility = View.GONE
                 binding.characterRecyclerView.visibility = View.VISIBLE
 
-                val adapters: ArrayList<RecyclerView.Adapter<out RecyclerView.ViewHolder>> =
-                    arrayListOf(CharacterDetailsAdapter(character, this))
                 val roles = character.roles
-                if(roles!=null){
-                    val perRow = clamp(resources.displayMetrics.widthPixels / 124f.px, 1, 4)
-                    val multiplier = min(perRow, roles.size)
-                    for (i in 0 until max(1, roles.size / perRow)) {
-                        adapters.add(
-                            MediaGridAdapter(
-                                ArrayList(
-                                    roles.subList(
-                                        i * multiplier,
-                                        (i + 1) * multiplier
-                                    )
-                                ), this
-                            )
-                        )
+                if (roles != null) {
+                    val mediaAdaptor = MediaAdaptor(0, roles, this, matchParent = true)
+                    val concatAdaptor = ConcatAdapter(CharacterDetailsAdapter(character, this), mediaAdaptor)
+
+                    val gridSize = (screenWidth / 124f).toInt()
+                    val gridLayoutManager = GridLayoutManager(this, gridSize)
+                    gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            return when (position) {
+                                0    -> gridSize
+                                else -> 1
+                            }
+                        }
                     }
-                    binding.characterRecyclerView.adapter = ConcatAdapter(adapters)
-                    binding.characterRecyclerView.layoutManager = LinearLayoutManager(this)
+                    binding.characterRecyclerView.adapter = concatAdaptor
+                    binding.characterRecyclerView.layoutManager = gridLayoutManager
                 }
             }
         }
 
-        val live = Refresh.activity.getOrPut(this.hashCode()){ MutableLiveData(true) }
-        live.observe(this){
-            scope.launch (Dispatchers.IO){
-               model.loadCharacter(character)
+        val live = Refresh.activity.getOrPut(this.hashCode()) { MutableLiveData(true) }
+        live.observe(this) {
+            scope.launch(Dispatchers.IO) {
+                model.loadCharacter(character)
             }
         }
     }
 
     override fun onResume() {
-        binding.characterProgress.visibility=if (!loaded) View.VISIBLE else View.GONE
+        binding.characterProgress.visibility = if (!loaded) View.VISIBLE else View.GONE
         super.onResume()
     }
 
     private var isCollapsed = false
     private val percent = 30
     private var mMaxScrollSize = 0
-    private var screenWidth:Float = 0f
+    private var screenWidth: Float = 0f
 
     override fun onOffsetChanged(appBar: AppBarLayout, i: Int) {
         if (mMaxScrollSize == 0) mMaxScrollSize = appBar.totalScrollRange
         val percentage = abs(i) * 100 / mMaxScrollSize
         val cap = clamp((percent - percentage) / percent.toFloat(), 0f, 1f)
 
-        binding.characterCover.scaleX = 1f*cap
-        binding.characterCover.scaleY = 1f*cap
-        binding.characterCover.cardElevation = 32f*cap
+        binding.characterCover.scaleX = 1f * cap
+        binding.characterCover.scaleY = 1f * cap
+        binding.characterCover.cardElevation = 32f * cap
 
-        binding.characterCover.visibility= if(binding.characterCover.scaleX==0f) View.GONE else View.VISIBLE
+        binding.characterCover.visibility = if (binding.characterCover.scaleX == 0f) View.GONE else View.VISIBLE
 
         if (percentage >= percent && !isCollapsed) {
             isCollapsed = true
-            this.window.statusBarColor = ContextCompat.getColor(this, R.color.nav_bg)
+            if (uiSettings.immersiveMode) this.window.statusBarColor = ContextCompat.getColor(this, R.color.nav_bg)
+            binding.characterAppBar.setBackgroundResource(R.color.nav_bg)
         }
         if (percentage <= percent && isCollapsed) {
             isCollapsed = false
-            this.window.statusBarColor = ContextCompat.getColor(this, R.color.nav_bg_inv)
+            if (uiSettings.immersiveMode) this.window.statusBarColor = ContextCompat.getColor(this, R.color.status)
+            binding.characterAppBar.setBackgroundResource(R.color.bg)
         }
     }
 }

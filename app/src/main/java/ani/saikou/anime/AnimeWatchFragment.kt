@@ -10,18 +10,19 @@ import androidx.core.math.MathUtils
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
-import ani.saikou.anime.source.AnimeSources
-import ani.saikou.anime.source.HSources
-import ani.saikou.anime.source.Sources
+import ani.saikou.*
 import ani.saikou.databinding.FragmentAnimeWatchBinding
-import ani.saikou.dp
 import ani.saikou.media.Media
 import ani.saikou.media.MediaDetailsViewModel
-import ani.saikou.navBarHeight
+import ani.saikou.parsers.AnimeParser
+import ani.saikou.parsers.AnimeSources
+import ani.saikou.parsers.HAnimeSources
+import ani.saikou.parsers.WatchSources
+import ani.saikou.settings.PlayerSettings
+import ani.saikou.settings.UserInterfaceSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -31,7 +32,7 @@ import kotlin.math.max
 import kotlin.math.roundToInt
 
 open class AnimeWatchFragment : Fragment() {
-    open val sources: Sources = AnimeSources
+    open val watchSources: WatchSources = AnimeSources
     private var _binding: FragmentAnimeWatchBinding? = null
     private val binding get() = _binding!!
     private val model: MediaDetailsViewModel by activityViewModels()
@@ -40,7 +41,7 @@ open class AnimeWatchFragment : Fragment() {
 
     private var start = 0
     private var end: Int? = null
-    private var style = 0
+    private var style: Int? = null
     private var reverse = false
 
     private lateinit var headerAdapter: AnimeWatchAdapter
@@ -51,6 +52,9 @@ open class AnimeWatchFragment : Fragment() {
 
     var continueEp: Boolean = false
     var loaded = false
+
+    lateinit var playerSettings: PlayerSettings
+    lateinit var uiSettings: UserInterfaceSettings
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,7 +71,11 @@ open class AnimeWatchFragment : Fragment() {
         screenWidth = resources.displayMetrics.widthPixels.dp
 
         var maxGridSize = (screenWidth / 100f).roundToInt()
-        maxGridSize = max(4,maxGridSize-(maxGridSize%2))
+        maxGridSize = max(4, maxGridSize - (maxGridSize % 2))
+
+        playerSettings =
+            loadData("player_settings", toast = false) ?: PlayerSettings().apply { saveData("player_settings", this) }
+        uiSettings = loadData("ui_settings", toast = false) ?: UserInterfaceSettings().apply { saveData("ui_settings", this) }
 
         val gridLayoutManager = GridLayoutManager(requireContext(), maxGridSize)
 
@@ -76,11 +84,11 @@ open class AnimeWatchFragment : Fragment() {
                 val style = episodeAdapter.getItemViewType(position)
 
                 return when (position) {
-                    0 -> maxGridSize
+                    0    -> maxGridSize
                     else -> when (style) {
-                        0 -> maxGridSize
-                        1 -> 2
-                        2 -> 1
+                        0    -> maxGridSize
+                        1    -> 2
+                        2    -> 1
                         else -> maxGridSize
                     }
                 }
@@ -88,11 +96,16 @@ open class AnimeWatchFragment : Fragment() {
         }
 
         binding.animeSourceRecycler.layoutManager = gridLayoutManager
+
+        model.scrolledToTop.observe(viewLifecycleOwner){
+            if(it) binding.animeSourceRecycler.scrollToPosition(0)
+        }
+
         continueEp = model.continueMedia ?: false
         model.getMedia().observe(viewLifecycleOwner) {
             if (it != null) {
                 media = it
-                media.selected = model.loadSelected(media.id)
+                media.selected = model.loadSelected(media)
 
                 style = media.selected!!.recyclerStyle
                 reverse = media.selected!!.recyclerReversed
@@ -100,11 +113,11 @@ open class AnimeWatchFragment : Fragment() {
                 progress = View.GONE
                 binding.mediaInfoProgressBar.visibility = progress
 
-                if(!loaded) {
-                    model.watchSources = if (media.isAdult) HSources else AnimeSources
+                if (!loaded) {
+                    model.watchSources = if (media.isAdult) HAnimeSources else AnimeSources
 
-                    headerAdapter = AnimeWatchAdapter(it, this, sources)
-                    episodeAdapter = EpisodeAdapter(style, media, this)
+                    headerAdapter = AnimeWatchAdapter(it, this, watchSources)
+                    episodeAdapter = EpisodeAdapter(style ?: uiSettings.animeDefaultView, media, this)
 
                     binding.animeSourceRecycler.adapter = ConcatAdapter(headerAdapter, episodeAdapter)
 
@@ -116,8 +129,7 @@ open class AnimeWatchFragment : Fragment() {
                         model.loadEpisodes(media, media.selected!!.source)
                     }
                     loaded = true
-                }
-                else{
+                } else {
                     reload()
                 }
             }
@@ -139,7 +151,7 @@ open class AnimeWatchFragment : Fragment() {
                                 episode.desc = media.anime!!.kitsuEpisodes!![i]?.desc
                                 episode.title = media.anime!!.kitsuEpisodes!![i]?.title
                                 episode.thumb =
-                                    media.anime!!.kitsuEpisodes!![i]?.thumb ?: media.cover
+                                    media.anime!!.kitsuEpisodes!![i]?.thumb ?: FileUrl(media.cover?:"")
                             }
                         }
                     }
@@ -153,7 +165,7 @@ open class AnimeWatchFragment : Fragment() {
                     val limit = when {
                         (divisions < 25) -> 25
                         (divisions < 50) -> 50
-                        else -> 100
+                        else             -> 100
                     }
                     headerAdapter.clearChips()
                     if (total > limit) {
@@ -176,33 +188,46 @@ open class AnimeWatchFragment : Fragment() {
         }
 
         model.getKitsuEpisodes().observe(viewLifecycleOwner) { i ->
-            if(i!=null)
+            if (i != null)
                 media.anime?.kitsuEpisodes = i
         }
 
         model.getFillerEpisodes().observe(viewLifecycleOwner) { i ->
-            if(i!=null)
+            if (i != null)
                 media.anime?.fillerEpisodes = i
         }
     }
 
-    fun onSourceChange(i: Int): LiveData<String> {
+    fun onSourceChange(i: Int): AnimeParser {
         media.anime?.episodes = null
         reload()
-        val selected = model.loadSelected(media.id)
+        val selected = model.loadSelected(media)
         selected.source = i
+        selected.server = null
         model.saveSelected(media.id, selected, requireActivity())
         media.selected = selected
+        return watchSources[i]
+    }
+
+    fun onDubClicked(checked:Boolean){
+        val selected = model.loadSelected(media)
+        watchSources[selected.source].selectDub = checked
+        selected.preferDub = checked
+        model.saveSelected(media.id, selected, requireActivity())
+        media.selected = selected
+        lifecycleScope.launch(Dispatchers.IO) { model.forceLoadEpisode(media, selected.source) }
+    }
+
+    fun loadEpisodes(i: Int) {
         lifecycleScope.launch(Dispatchers.IO) { model.loadEpisodes(media, i) }
-        return sources[i]!!.live
     }
 
     fun onIconPressed(viewType: Int, rev: Boolean) {
-        media.selected!!.recyclerStyle = viewType
-        media.selected!!.recyclerReversed = reverse
-        model.saveSelected(media.id, media.selected!!, requireActivity())
         style = viewType
         reverse = rev
+        media.selected!!.recyclerStyle = style
+        media.selected!!.recyclerReversed = reverse
+        model.saveSelected(media.id, media.selected!!, requireActivity())
         reload()
     }
 
@@ -221,7 +246,7 @@ open class AnimeWatchFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun reload() {
-        val selected = model.loadSelected(media.id)
+        val selected = model.loadSelected(media)
         model.saveSelected(media.id, selected, requireActivity())
         headerAdapter.handleEpisodes()
         episodeAdapter.notifyItemRangeRemoved(0, episodeAdapter.arr.size)
@@ -233,19 +258,19 @@ open class AnimeWatchFragment : Fragment() {
                     .slice(start..(end ?: (media.anime!!.episodes!!.size - 1)))
             )
             if (reverse)
-                arr = (arr.reversed() as? ArrayList<Episode>)?:arr
+                arr = (arr.reversed() as? ArrayList<Episode>) ?: arr
         }
         episodeAdapter.arr = arr
-        episodeAdapter.updateType(style)
+        episodeAdapter.updateType(style ?: uiSettings.animeDefaultView)
         episodeAdapter.notifyItemRangeInserted(0, arr.size)
     }
 
     override fun onDestroy() {
-        sources.flushLive()
+        watchSources.flushText()
         super.onDestroy()
     }
 
-    var state: Parcelable?=null
+    var state: Parcelable? = null
     override fun onResume() {
         super.onResume()
         binding.mediaInfoProgressBar.visibility = progress

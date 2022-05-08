@@ -10,9 +10,9 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/animeTrendingContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_height="wrap_content">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/animeTrendingViewPager"
@@ -34,6 +34,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:hint="@string/anime"
+                android:textColorHint="@color/bg_opp"
                 android:transitionName="@string/search"
                 app:boxBackgroundColor="@color/status"
                 app:boxCornerRadiusBottomEnd="28dp"
@@ -41,6 +42,7 @@
                 app:boxCornerRadiusTopEnd="28dp"
                 app:boxCornerRadiusTopStart="28dp"
                 app:endIconDrawable="@drawable/ic_round_search_24"
+                app:endIconTint="@color/bg_opp"
                 app:hintAnimationEnabled="true">
 
                 <AutoCompleteTextView
@@ -61,15 +63,15 @@
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="4dp"
-                android:backgroundTint="@color/bg_black"
-                app:cardCornerRadius="32dp">
+                android:backgroundTint="@color/status"
+                app:cardCornerRadius="26dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/animeUserAvatar"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/ic_round_person_24"
+                    app:srcCompat="@drawable/ic_round_settings_24"
                     tools:ignore="ContentDescription,ImageContrastCheck" />
 
             </com.google.android.material.card.MaterialCardView>
@@ -87,10 +89,12 @@
     </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/animeListContainer"
         android:layout_width="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/animeGenre"
@@ -199,13 +203,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
+        android:id="@+id/animeRecently"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:fontFamily="@font/poppins_bold"
         android:padding="8dp"
         android:text="@string/updated"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -236,12 +243,15 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/animePopular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:fontFamily="@font/poppins_bold"
         android:padding="8dp"
         android:text="@string/popular_anime"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
 </LinearLayout>

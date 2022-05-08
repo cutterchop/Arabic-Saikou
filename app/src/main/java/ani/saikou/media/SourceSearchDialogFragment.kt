@@ -13,29 +13,29 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import ani.saikou.BottomSheetDialogFragment
-import ani.saikou.anime.source.AnimeSourceAdapter
-import ani.saikou.anime.source.AnimeSources
-import ani.saikou.anime.source.HSources
+import ani.saikou.anime.AnimeSourceAdapter
 import ani.saikou.databinding.BottomSheetSourceSearchBinding
-import ani.saikou.manga.source.MangaSourceAdapter
-import ani.saikou.manga.source.MangaSources
+import ani.saikou.manga.MangaSourceAdapter
 import ani.saikou.navBarHeight
+import ani.saikou.parsers.AnimeSources
+import ani.saikou.parsers.HAnimeSources
+import ani.saikou.parsers.HMangaSources
+import ani.saikou.parsers.MangaSources
 import ani.saikou.px
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SourceSearchDialogFragment : BottomSheetDialogFragment(){
+class SourceSearchDialogFragment : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetSourceSearchBinding? = null
     private val binding get() = _binding!!
-   val model : MediaDetailsViewModel by activityViewModels()
+    val model: MediaDetailsViewModel by activityViewModels()
     private var searched = false
     var anime = true
-    var i : Int?=null
-    var id : Int?=null
-    var media : Media? = null
-    var headers:MutableMap<String,String>?=null
+    var i: Int? = null
+    var id: Int? = null
+    var media: Media? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = BottomSheetSourceSearchBinding.inflate(inflater, container, false)
@@ -45,7 +45,7 @@ class SourceSearchDialogFragment : BottomSheetDialogFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.mediaListContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> { bottomMargin += navBarHeight }
 
-        val scope = viewLifecycleOwner.lifecycleScope
+        val scope = requireActivity().lifecycleScope
         val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         model.getMedia().observe(viewLifecycleOwner) {
             media = it
@@ -58,15 +58,14 @@ class SourceSearchDialogFragment : BottomSheetDialogFragment(){
 
                 i = media!!.selected!!.source
                 if (media!!.anime != null) {
-                    val source = (if(!media!!.isAdult) AnimeSources else HSources)[i!!]!!
-                    headers = source.headers
+                    val source = (if (!media!!.isAdult) AnimeSources else HAnimeSources)[i!!]
                     binding.searchSourceTitle.text = source.name
-                    binding.searchBarText.setText(media!!.getMangaName())
+                    binding.searchBarText.setText(media!!.mangaName())
                     fun search() {
                         binding.searchBarText.clearFocus()
                         imm.hideSoftInputFromWindow(binding.searchBarText.windowToken, 0)
                         scope.launch {
-                            model.sources.postValue(withContext(Dispatchers.IO){ source.search(binding.searchBarText.text.toString()) })
+                            model.responses.postValue(withContext(Dispatchers.IO) { source.search(binding.searchBarText.text.toString()) })
                         }
                     }
                     binding.searchBarText.setOnEditorActionListener { _, actionId, _ ->
@@ -75,7 +74,7 @@ class SourceSearchDialogFragment : BottomSheetDialogFragment(){
                                 search()
                                 true
                             }
-                            else -> false
+                            else                         -> false
                         }
                     }
                     binding.searchBar.setEndIconOnClickListener { search() }
@@ -83,15 +82,17 @@ class SourceSearchDialogFragment : BottomSheetDialogFragment(){
 
                 } else if (media!!.manga != null) {
                     anime = false
-                    val source = MangaSources[i!!]!!
-                    headers = source.headers
+                    val source = (if (media!!.isAdult) HMangaSources else MangaSources)[i!!]
                     binding.searchSourceTitle.text = source.name
-                    binding.searchBarText.setText(media!!.getMangaName())
+                    binding.searchBarText.setText(media!!.mangaName())
                     fun search() {
                         binding.searchBarText.clearFocus()
                         imm.hideSoftInputFromWindow(binding.searchBarText.windowToken, 0)
                         scope.launch {
-                            model.sources.postValue(withContext(Dispatchers.IO){ source.search(binding.searchBarText.text.toString()) })
+                            model.responses.postValue(
+                                withContext(Dispatchers.IO) {
+                                    source.search(binding.searchBarText.text.toString())
+                                })
                         }
                     }
                     binding.searchBarText.setOnEditorActionListener { _, actionId, _ ->
@@ -100,21 +101,24 @@ class SourceSearchDialogFragment : BottomSheetDialogFragment(){
                                 search()
                                 true
                             }
-                            else -> false
+                            else                         -> false
                         }
                     }
                     binding.searchBar.setEndIconOnClickListener { search() }
                     if (!searched) search()
                 }
                 searched = true
-                model.sources.observe(viewLifecycleOwner) { j ->
+                model.responses.observe(viewLifecycleOwner) { j ->
                     if (j != null) {
                         binding.searchRecyclerView.visibility = View.VISIBLE
                         binding.searchProgress.visibility = View.GONE
                         binding.searchRecyclerView.adapter =
-                            if (anime) AnimeSourceAdapter(j, model, i!!, media!!.id, this, scope, headers)
-                            else MangaSourceAdapter(j, model, i!!, media!!.id, this, scope, headers)
-                        binding.searchRecyclerView.layoutManager = GridLayoutManager(requireActivity(), clamp(requireActivity().resources.displayMetrics.widthPixels / 124f.px, 1, 4))
+                            if (anime) AnimeSourceAdapter(j, model, i!!, media!!.id, this, scope)
+                            else MangaSourceAdapter(j, model, i!!, media!!.id, this, scope)
+                        binding.searchRecyclerView.layoutManager = GridLayoutManager(
+                            requireActivity(),
+                            clamp(requireActivity().resources.displayMetrics.widthPixels / 124f.px, 1, 4)
+                        )
                     }
                 }
             }
@@ -127,7 +131,7 @@ class SourceSearchDialogFragment : BottomSheetDialogFragment(){
     }
 
     override fun dismiss() {
-        model.sources.value = null
+        model.responses.value = null
         super.dismiss()
     }
 }
